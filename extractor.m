@@ -4,29 +4,6 @@ epoch = extract('RunTest_Dvij_acc_acc_ppg.mat', 2, 2000);% keep every epoch as a
 PSD = average_PSD(epoch);
 P2P = peak2peak(epoch);
 
-% labelled_data_P2P = zeros(232, 4); 
-% 
-% for i = 1:2
-%     labelled_data_P2P(:,i) = P2P(:,i);
-% end
-% 
-% for i = 1:232
-%     if i < 16
-%         labelled_data_P2P(i, 3) = 1;
-%     if 16 < i && i < 31 
-%         labelled_data_P2P(i, 3) = 2;
-%     if 31 < i && i < 46 
-%         labelled_data_P2P(i, 3) = 3;
-%     if 46 < i && i < 61 
-%         labelled_data_P2P(i, 3) = 4;
-%     if 61 < i && i < 76 
-%         labelled_data_P2P(i, 3) = 5;
-%     if 76 < i && i < 106 
-%         labelled_data_P2P(i, 3) = 1;
-% end
-
-
-
 
 %=========Labeling PSD data==========
 timeFrame = [15,15,15,15,15,30,10,20,10,5,5,5,5,5,5,5,5,5,5];% duration of each task
