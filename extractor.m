@@ -40,15 +40,15 @@ walk_slope_acc2 = P2P(146:end,2);
 %======================================
 %========Plotting different tasks======
 
-scatter(stand_acc1, stand_acc2, 'fill');
+scatter(stand_acc1, stand_acc2);
 hold on;
-scatter(walk_slope_acc1, walk_slope_acc2,'fill');
+scatter(walk_slope_acc1, walk_slope_acc2);
 hold on;
-scatter(walk_acc1, walk_acc2,'fill');
+scatter(walk_acc1, walk_acc2);
 hold on;
-scatter(run_acc1, run_acc2,'fill');
+scatter(run_acc1, run_acc2);
 hold on;
-scatter(sprint_acc1, sprint_acc2,'fill');
+scatter(sprint_acc1, sprint_acc2);
 legend('stand','slope','walk','run','sprint');
 title('Peak To Peak Value Of Each Epoch FOR ACCL1 vs. ACCL2');
 xlabel('Peak to Peak Accl1');

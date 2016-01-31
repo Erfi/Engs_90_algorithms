@@ -1,6 +1,6 @@
 function [ epoch ] = extract( filename, epochLength, sampleRate )
 %This function is the first step.
-%It takes the filename and returns a matric of epoches with
+%It takes the filename and returns a matrix of epoches with
 %desired epoch length given the sample rate.
 
 raw = load(filename);
