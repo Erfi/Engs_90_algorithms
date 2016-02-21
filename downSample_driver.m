@@ -8,7 +8,7 @@
 
 startTime = 45;%start time of the file (in the file's name)
 endTime = 60;% end time of the file (in the file's name)
-baseDirectory = './data/raw/'; %folder/directory that the raw files are in
+baseDirectory = strcat('.',filesep,'data',filesep,'raw',filesep'); %folder/directory that the raw files are in
 fileNameTemplate = strcat(baseDirectory, 'patient1a_acc_acc_acc_mic_*_*_min.mat'); %template for the raw filenames (Notice: start and end times are replaced with *)
 numMatFiles = size(dir(fileNameTemplate),1);% number of files matching the template
 success = true;% overall success flag
@@ -24,7 +24,7 @@ for i = 1:numMatFiles
         raw = load(file_name);
         raw = raw.data;
         %>>>>> change the line below in order to change the saving name and/or directory <<<<<
-        savingName = strcat('./data/down_sampled/DOWN_patient1a_acc_acc_acc_mic_',num2str(startTime),'_',num2str(endTime),'_min.mat');
+        savingName = strcat('.',filesep,'data',filesep,'down_sampled',filesep,'DOWN_patient1a_acc_acc_acc_mic_',num2str(startTime),'_',num2str(endTime),'_min.mat');
         downSample(raw,2000, savingName); 
     end 
     %update start and end time for the next filename
