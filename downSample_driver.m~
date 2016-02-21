@@ -1,0 +1,93 @@
+%Erfan Azad
+%Date: 21 Feb 2016
+%Description: This driver is using the downSample function to down sample
+%all the .mat files in a given directory.
+%This can be used as part of pre-processing of the data.
+%For down sampling individual data vector/matrices please use the 
+%downSample function.
+
+clear; clc; close all;
+X = load('RunTest_Dvij_acc_acc_ppg.mat');
+all_sensors = X.data;
+downSample(all_sensors,2000, './data/Down_test1.mat');
+
+
+
+% data=all_sensors(:,1);
+% plot(data);
+% figure;
+% data_down = decimate(data, 10, 'fir');
+% plot(data_down);
+% sr = 2000;
+% save('./data/DOWNED_RunTest_Dvij_acc_acc_ppg.mat', 'data_down', 'sr');
+
+
+
+
+
+
+
+
+
+
+
+% Saaid_ECG = all_sensors(:,1); 
+% Saaid_EMG = all_sensors(:,2);
+% Saaid_EDA = all_sensors(:,3);
+% Saaid_mic = all_sensors(:,4);
+% 
+% ECG = decimate (Saaid_ECG, 10, 'fir');
+% EMG = decimate (Saaid_EMG, 10, 'fir');
+% EDA = decimate (Saaid_EDA, 10, 'fir');
+% mic = decimate (Saaid_mic, 10, 'fir');
+% fs = 2000; %sampling rate
+% 
+% save ('Saaid_fs2000', 'ECG', 'EMG', 'EDA', 'mic', 'fs');
+
+
+%%
+startTime = 45;%start time of the file (in the file's name)
+endTime = 60;% end time of the file (in the file's name)
+baseDirectory = './data/'; %folder/directory that the raw files are in
+fileNameTemplate = strcat(baseDirectory, 'patient1a_acc_acc_acc_mic_*_*_min.mat'); %template for the filenames (Notice: start and end times are replaced with *)
+numMatFiles = size(dir(fileNameTemplate),1);% number of files matching the template
+success = true;% overall success flag
+for i = 1:numMatFiles
+    file_name = strcat('./data/patient1a_acc_acc_acc_mic_',num2str(startTime),'_',num2str(endTime),'_min.mat');
+    if exist(file_name, 'file') == 0 % 0 if the file does not exist
+        disp(strcat('Nope, File is not there :( --> ', file_name));
+        disp('Quitting...');
+        success = false;
+        break;
+    else
+        disp(strcat('Down sampling -->  ',file_name));
+        raw = load(file_name);
+        raw = raw.data;
+        %change the line below in order to change the saving name anddirectory
+        savingName = strcat('./data/DOWN_patient1a_acc_acc_acc_mic_',num2str(startTime),'_',num2str(endTime),'_min.mat');
+        downSample(raw,2000, savingName); 
+    end 
+    startTime = endTime;
+    endTime = endTime + 15;%HACK: we know that sample names are in 15 min increments!
+end
+
+if(success)
+   disp('Process completed successfully!'); 
+end
+% if exist(file_name, 'file') == 0 % 0 if the file does not exist
+%     dist('Nope, File is not there :(');
+% else
+%     disp('Yup, File is there!');
+%     raw = load(file_name);
+%     raw = raw.data;
+%     savingName = strcat('./data/DOWN_patient1a_acc_acc_acc_mic_',num2str(startTime),'_',num2str(endTime),'_min.mat');
+%     downSample(raw,2000, savingName); 
+% end
+% edata = dir(directory_name);
+
+
+
+% str = strcat('./data/patient1a_acc_acc_acc_mic_',num2str(start),'_',num2str(finish),'_min.mat')
+
+
+
