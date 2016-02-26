@@ -1,0 +1,41 @@
+clear; clc; clf;
+tic
+
+fs = 50000;
+load('microphone.mat');
+mic = mic(1:100000);
+N = numel(mic);
+t = (0:N-1)/fs;
+disp('loading file...done!')
+
+mic_median = median_filter(mic,1000,12);
+%[Fx,f] = fft_calc(mic_median,fs);
+
+disp('median filter...done!')
+wo = 150/(fs/2);  bw = wo/50;
+[b,a] = iirnotch(wo,bw);
+
+mic_notch = filter(b,a,mic_median);
+%Fy = fft_calc(mic_notch,fs);
+disp('notch filter...done!')
+
+figure(1)
+subplot(211)
+plot(t,mic,t,mic_median,'rx')
+subplot(212)
+%semilogx(f,Fx,f,Fy)
+
+n_start = 4000;
+n_width = 7700;
+n_period = 14713;
+k = 1;
+for i = n_start:n_period:N-n_period
+	mic_final{k} = mic_notch(i:i+n_width);
+	time_final{k} = t(i:i+n_width);
+	k = k + 1;
+end
+
+disp('binning sounds...done!')
+
+%save('mic_final.mat','mic_final','time_final.mat')
+toc

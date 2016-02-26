@@ -8,12 +8,16 @@
 
 startTime = 45;%start time of the file (in the file's name)
 endTime = 60;% end time of the file (in the file's name)
+sensorSet1 = 'acc_acc_acc_mic';
+sensorSet2 = 'eda_ppg_emg_ecg';
+% >>>>>Change to use different sensor set<<<<<<<<
+currentSensorSet = sensorSet1;
 baseDirectory = strcat('.',filesep,'data',filesep,'raw',filesep'); %folder/directory that the raw files are in
-fileNameTemplate = strcat(baseDirectory, 'patient1a_acc_acc_acc_mic_*_*_min.mat'); %template for the raw filenames (Notice: start and end times are replaced with *)
+fileNameTemplate = strcat(baseDirectory, 'patient1a_',currentSensorSet,'_*_*_min.mat'); %template for the raw filenames (Notice: start and end times are replaced with *)
 numMatFiles = size(dir(fileNameTemplate),1);% number of files matching the template
 success = true;% overall success flag
 for i = 1:numMatFiles
-    file_name = strcat(baseDirectory,'patient1a_acc_acc_acc_mic_',num2str(startTime),'_',num2str(endTime),'_min.mat');
+    file_name = strcat(baseDirectory,'patient1a_',currentSensorSet,'_',num2str(startTime),'_',num2str(endTime),'_min.mat');
     if exist(file_name, 'file') == 0 % 0 if the file does not exist
         disp(strcat('Nope, File is not there :( --> ', file_name));
         disp('Quitting...');
@@ -23,8 +27,7 @@ for i = 1:numMatFiles
         disp(strcat('Down sampling -->  ',file_name));
         raw = load(file_name);
         raw = raw.data;
-        %>>>>> change the line below in order to change the saving name and/or directory <<<<<
-        savingName = strcat('.',filesep,'data',filesep,'down_sampled',filesep,'DOWN_patient1a_acc_acc_acc_mic_',num2str(startTime),'_',num2str(endTime),'_min.mat');
+        savingName = strcat('data',filesep,'down_sampled',filesep,'DOWN_patient1a_',currentSensorSet,'_',num2str(startTime),'_',num2str(endTime),'_min.mat');
         downSample(raw,2000, savingName); 
     end 
     %update start and end time for the next filename

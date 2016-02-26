@@ -9,7 +9,7 @@
 %SR: saving sample rate
 %saveDirectoryandName: directory to save the down sampled data and a name for
 %saving in form of './data/myDownSampledData.mat'
-function [ result ] = downSample( rawMatrix, SR, saveDirectoryandName)
+function [ data ] = downSample( rawMatrix, SR, saveDirectoryandName)
 
 numCols = size(rawMatrix,2);
 sampleRate = SR;
@@ -21,12 +21,12 @@ for i = 1:numCols
 end
 
 %concatentate the downsampled columns together
-result = data_down{1};
+data = data_down{1};
 for j= 2:numCols
-    result = horzcat(result,data_down{i});
+    data = horzcat(data,data_down{j});
 end
 
 %save the down sampled matrix
-save(savingName, 'result', 'sampleRate');
+save(savingName, 'data', 'sampleRate');
 end
 
