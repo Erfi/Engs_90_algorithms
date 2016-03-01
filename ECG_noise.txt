@@ -1,0 +1,38 @@
+Types of noise in ECG:
+
+Sources of noise:
+
+==== Power line inteference ====
+-60Hz and multiples
+-up to 50% of QRS amplitude
+
+Solution: 
+-notch filter at 60Hz
+-Comb Filter 
+================================
+
+
+==== Electrode contact noise, baseline drift and motion artifacts ====
+-typically <0.5Hz signals (except for the abrupt shift due to motion)
+
+Solution:
+-High-Pass filter with cut-off frequency at ~0.5Hz
+================================
+
+
+==== EMG from chest wall ====
+- about 10% of ECG
+- 20-1000Hz
+
+Solution:
+- Low-pass filter with cut-off frequency >40Hz
+
+=============================
+
+
+
+
+
+
+
+

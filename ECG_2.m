@@ -180,8 +180,8 @@ for i = 1: numel(P_start)
 end
 
 % Find average P length and T length
-P_length_average = (1/sampling_rate) * (sum(P_length) / numel(P_length)); %in seconds
-T_length_average = (1/sampling_rate) * (sum(T_length) / numel(T_length)); %in seconds
+P_length_average = (1/sampling_rate) * (sum(P_length) / numel(P_length)) %in seconds
+T_length_average = (1/sampling_rate) * (sum(T_length) / numel(T_length)) %in seconds
 
 % Find STval total average and standard deviation 
 STval_average = mean (STval_local_average)

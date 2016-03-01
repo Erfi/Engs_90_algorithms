@@ -7,7 +7,7 @@ function [ epochData ] = epochify( timeSeries, duration, SR)
 %
 %
 %OUTPUT: returns an data structure containing the epoch as well as other
-%useful informaiton such as start and endtime of an epoch.
+%useful in formaiton such as start and endtime of an epoch.
 
 numSamplesInDuration = duration*SR;
 len = size(timeSeries,1);

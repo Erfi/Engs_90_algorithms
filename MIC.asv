@@ -30,7 +30,7 @@ d3 = designfilt('bandstopiir','FilterOrder',4, ...
                'DesignMethod','butter','SampleRate',fs);
 
 d4 = designfilt('bandstopiir','FilterOrder',4, ...
-               'HalfPowerFrequency1',239,'HalfPowerFrequency2',241, ...
+               'HalfPowerFrequency1',239,'HalfPowerFrequency2',24, ...
                'DesignMethod','butter','SampleRate',fs);
 
 d5 = designfilt('bandstopiir','FilterOrder',4, ...
@@ -41,8 +41,7 @@ mic_notch = filtfilt(d1,mic_blips_removed);
 mic_notch = filtfilt(d2,mic_notch);
 mic_notch = filtfilt(d3,mic_notch);
 mic_notch = filtfilt(d4,mic_notch);
-mic_notch = filtfilt(d5,mic_notch);
-
+mic_notch = filtfilt(b,a, mic_notch);
 
 [Fy, f1] = fft_calc(mic_notch,fs);
 disp('notch filter...done!')

@@ -1,30 +1,13 @@
-% Latika and Dvij
-% 2/27 - Latika Update: I fixed the issue in detecting the "C" peaks. I 
-% might have introduced a new issue where the first peak that exceeds the
-% threshold will be detected, but the wave might rise even more above that
-% so the real peak which occurs just moments later is not detected. I'm not
-% sure how to address this without introducing more conditions based on
-% assumptions that may not always be true. It might not be an issue worth
-% fixing--or maybe we mask waves that have this characteristic (because 
-% there would have to be significant noise for this to happen). Free to
-% talk later tonight/tomorrow.
+function feature_vector = PPG_extractor(epoch, fs)% fs is the sampling rate
 
-
-clear; clc; clf;
-
-load RunTest_Dvij_acc_acc_ppg.mat
-
-fs = 2000;
-ppg = data(50000:100000,3);
+% time and data vectors
+ppg = epoch;
 N = numel(ppg);
-
 t = (0:N-1)/fs;
-[Fppg,f] = fft_calc(ppg,fs);
-[b,a] = butter(3,[1, 50]/(fs/2));
 
-% b = fir1(500,10/(fs/2));
+% zero phase filter
+[b,a] = butter(3,[1, 50]/(fs/2));
 ppg_filtered = filtfilt(b,a,ppg);
-Fppg_filtered = fft_calc(ppg_filtered,fs);
 
 % A is the big peak
 % B is the following valley
@@ -85,25 +68,12 @@ D_ind(i) = find(ppg_filtered(second_window) == D(i)) + C_ind(i);
 
 end
 
+
 for i = 1: numel(A) - 1
 	AC_length(i) = C_ind(i) - A_ind(i); 
-	AB_height = A(i) - B(i); 
+	AB_height(i) = A(i) - B(i); 
 end
 
-dppg = diff(ppg_filtered);
-[Fdppg,f2] = fft_calc(dppg,fs);
-figure(1)
-subplot(211)
-plot(t, ppg_filtered)
-hold on;
-hline(0)
-plot(t(A_ind), ppg_filtered(A_ind), 'rx')
-plot(t(B_ind), ppg_filtered(B_ind), 'ro')
-plot(t(C_ind), ppg_filtered(C_ind), 'bx')
-plot(t(D_ind), ppg_filtered(D_ind), 'bo')
-hold off;
-subplot(212)
-semilogx(f,Fppg,f2,Fdppg)
 
 % Should corelate with heart rate
 AA = diff(A_ind)./fs;
@@ -132,10 +102,9 @@ AC_length_std = std(AC_length)./fs;
 AB_height_av = mean(AB_height);
 AB_height_std = std(AB_height);
 
+feature_vector = [AA_av, AA_std, A_av, A_std, B_av, B_std, C_av, C_std, D_av, D_std, AC_length_av, AC_length_std, AB_height_av, AB_height_std];
 
-feature = PPG_extractor(ppg, 2000);
-
-% Recommendations: 
+%Recommendations: 
 % How to deal with motion artifacts? 
 % Get two-wavelength PPG device for O2 sat calculation (See Pavlova et al)
 
