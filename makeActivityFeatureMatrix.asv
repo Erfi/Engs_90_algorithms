@@ -24,26 +24,22 @@ function [ activityFeatureMatrix ] = makeActivityFeatureMatrix( ActDirectory,Act
         filename2 = strcat(ActDirectory,num2str(i),title,set2,extension);
         
         dat1 = load(filename1);
-        dat2 = load(filename2);        
-        
-        % within each 10 s epoch, make a feature row for each epoch of
-        % length "epoch_length" (i.e. 2 epochs if desired length is 5 sec)
-        
+        dat2 = load(filename2);
+%         dat1 = dat1.data;
+%         dat2 = dat2.data;
+
         for k = 1:(10/epoch_length);
-            data1 = dat1.data(1+(k-1)*epoch_length*50000:k*epoch_length*50000,:);
-            data2 = dat2.data(1+(k-1)*epoch_length*5000:k*epoch_length*5000,:);
+            dat1 = dat1.data(1+(k-1)*epoch_length*50000:k*epoch_length*50000,:);
+            dat2 = dat2.data(1+(k-1)*epoch_length*5000:k*epoch_length*5000,:);
             
-            featureRow(k,:) = makeFeatureRow(data1, 50000, data2, 5000, activityLabel);
+            featureRow(k,:) = makeFeatureRow(dat1, 50000, dat2, 5000, activityLabel);
         end
-        
-        if i == 1
-            epochfeature = featureRow;
-        else
-            epochfeature = vertcat(epochfeature,featureRow);
-        end
-        
+%         featureRow(i,:) = makeFeatureRow(dat1, 50000, dat2, 5000, activityLabel);
+        epochfeature(length(epochfeature(:,1))+1:length(epochfeature(:,1))+k,:) = featureRow;
     end
 
     activityFeatureMatrix = epochfeature;
+%         activityFeatureMatrix = featureRow;
+
 end
 

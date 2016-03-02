@@ -19,11 +19,11 @@ function [ featureRow ] = makeFeatureRow(mat1,sampleRate1, ...
     Tag = label;
 
     %extract features from each sensor
-    ecg_feature = ECG_extractor(mat2(:,3), sampleRate2);
     emg_feature = EMG_extractor(mat2(:,2), sampleRate2);
     acc_feature = acc_extractor(mat1(:,1), mat1(:,2), mat1(:,3), sampleRate1);
     eda_feature = EDA_extractor(mat2(:,1), sampleRate2);
-    
+    ecg_feature = ECG_extractor(mat2(:,3), sampleRate2);
+
     %HERE ADD MORE SENSOR EXTRACTORS
 
     %make one row (1xd) from all the extracted features

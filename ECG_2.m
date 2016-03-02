@@ -42,8 +42,9 @@
 
 % Load data
 clear; clc; clf;
-load('Saaid_downsampled.mat');
-sampling_rate = 2000; 
+data = load('P:\16winter\engs090\GR 04 Detect Seizures\EMU data\Labeled Data for Use\All_Eat\1eat_eda_emg_ecg.mat');
+sampling_rate = 5000; 
+
 
 % Create test data vector
 start_time = 1;

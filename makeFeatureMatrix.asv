@@ -13,11 +13,11 @@ epoch_length = 5;       % define # seconds
 
 EatFeatureMatrix = makeActivityFeatureMatrix(EatDirectory,'eat',1, epoch_length);
 TalkFeatureMatrix = makeActivityFeatureMatrix(TalkDirectory,'talk',2, epoch_length);
-SleepFeatureMatrix = makeActivityFeatureMatrix(SleepDirectory,'sleep',3, epoch_length);
-TechFeatureMatrix = makeActivityFeatureMatrix(TechDirectory,'Tech',4, epoch_length);
+SleepFeatureMatrix = makeActivityFeatureMatrix(SleepDirectory,'sleep',3);
+TechFeatureMatrix = makeActivityFeatureMatrix(TechDirectory,'Tech',4);
 
 %plot histogram
-u = LinearDiscriminantTransform(SleepFeatureMatrix, TalkFeatureMatrix);
+% u = LinearDiscriminantTransform(SleepFeatureMatrix, TalkFeatureMatrix);
 
 
 

@@ -18,7 +18,7 @@ numEpoches = floor(size(eat1_acc_mic,1)/(sampleRate*10));% num of 10sec epoches 
 
 startInx = 1;
 endIndx = sampleRate*10;
-for i = 1:numEpoches
+for i = 1:numEpoches 
    data = eat1_acc_mic(startInx:endIndx,:);
    save(strcat(DirectoryName, 'eat1_acc_mic_', num2str(i),'.mat'),'data');
    

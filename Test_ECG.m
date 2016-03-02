@@ -1,53 +1,13 @@
-% Tyler Ray, Dvij Bajpai, and Latika Sridhar on Feb 14th 2016
-% Last Edited Feb 15th 2016 by Dvij Bajpai (Extensive edits)
-% This code takes an epoch of ECG data and analyzes the signal between the 
-% first and last R peaks in the epoch. 
 
-% The code
-% 1. Labels P, Q, R, S, and T between two RR intervals and stores the time stamps 
-%    in vectors called P_ind, Q_ind, R_ind, S_ind, and T_ind
-% 2. Finds the average heart rate and average XX intervals (X = P,Q,R,S,T)
-% 3. Finds the average P wave length (IMPORTANT TO NOTE DEFINITIONS of P_start AND P_end)
-% 4. Finds the average T wave length (IMPORTANT TO NOTE DEFINITIONS of T_start AND T_end)
-% 5. Finds the average QRS complex length 
-
-% Irregularities noted in Zijlmans et al.: 
-% Heart Rate Abnormalities: 
-% 1. Tachycardia (> 100 bpm)
-% 2. Brachycardia (< 60 bpm)
-% 3. Asystole (extended period with no pulse, up to 30s)
-% 4. Premature Arterial Depolarization (PAD/APD)
-% 5. Premature Ventricular Depolarization (PVC)
-% 6. Sinus pause and sinus arrhythmia
-% Conduction Abnormalities:
-% 7. First and Second degree Atrio-Ventricular (AV) block 
-% 8. Bundle branch block 
-% Repolarization abnormalities (potentially serious): 
-% 9. T wave inversion 
-% 10. ST elevation and depression 
-
-% Other irregularities noted in Opherk et al.: 
-% 1. Atrial Bigeminy 
-% 2. Ventricular Couplets 
-
-% TO DO: 
-% 
-% 1. Improve ST elevation and depression and ST length calculations (currently looking at 
-%	 standard deviation of local STval averages)
-% 2. Think of how to detect Premature Arterial Depolarization (PAD/APD)
-%	 Currently using PR segment length.
-% 3. Think of how to detect Premature Ventricular Depolarization (PVC)
-%	 Currently using RT segment length.
-% 4. Think of ways to detect T wave inversion 
-
-function feature_vector = ECG_extractor(epoch, fs)% fs is the sampling rate
+epoch = data(1:5000*10,3);
+fs = 5000;
 
 % Create time vector 
 t = (1:numel(epoch))./fs;
 N = numel(t);
 
 % Bandpass IIR zero-phase filter
-[b,a] = butter(2,[0.5 100]/(fs/2));
+[b,a] = butter(2,[0.5 20]/(fs/2));
 bpf_y = filtfilt(b, a, epoch);
 d1 = designfilt('bandstopiir','FilterOrder',4, ...
                'HalfPowerFrequency1',59,'HalfPowerFrequency2',61, ...
@@ -73,6 +33,8 @@ bpf_y = filtfilt (d2, bpf_y);
 bpf_y = filtfilt (d3, bpf_y);
 bpf_y = filtfilt (d4, bpf_y);
 bpf_y = filtfilt (d5, bpf_y);
+
+plot(t,bpf_y);
 
 % temp = fft(bpf_y);
 % FT = 20*log10(abs(temp(1:N/2)));
@@ -134,8 +96,11 @@ for i = 1:numel(R)-1
 	
 end
 
+numel(P_start)-2
+
 for i = 1: (numel(P_start)-2)%-2 is a hack to get it going. It was giving index out of bound for T_end(i) 
-	P_length(i) = P_end(i) - P_start(i);
+	i
+    P_length(i) = P_end(i) - P_start(i);
 	T_length(i) = T_end(i) - T_start(i); 
 	ST_length(i) = T_ind(i) - S_ind(i); %TO DO: look for ST elevation/ depression
 	PR_length(i) = R_ind(i+1) - P_ind(i); %can tell us about PAD and AV block
@@ -201,4 +166,3 @@ feature_vector = [RR_length_av, RR_length_std,P_height_av,P_height_std,...
     T_length_std,RS_height_av,RS_height_std,QRS_length_av,QRS_length_std,...
     PR_length_av,PR_length_std,ST_length_av,ST_length_std,ST_height_av,...
     ST_height_std,HR_av_bpm];
-end

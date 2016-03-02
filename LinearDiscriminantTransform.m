@@ -8,14 +8,13 @@ function [LDT] = LinearDiscriminantTransform(activity1 , activity2)
 
 %======= find important indeces
 
-numfeat = length(activity1(1,:))-1;
-act1epochs = length(activity1(:,1));
-act2epochs = length(activity2(:,1));
+numfeat = length(activity1(1,:))-1; %number of feature columns
+act1epochs = length(activity1(:,1));% number of epochs for activity1
+act2epochs = length(activity2(:,1));% number of epochs for activity2
 
-totaleps = act1epochs+act2epochs;
+totaleps = act1epochs+act2epochs; %total number of epoches (datapoints)
 
 % Make large matrix
-
 bigmat = zeros(totaleps, numfeat+1);
 bigmat(1:act1epochs,:) = activity1;
 bigmat(act1epochs+1:totaleps,:) = activity2;
@@ -23,6 +22,13 @@ bigmat(act1epochs+1:totaleps,:) = activity2;
 avgfeat = zeros(1,numfeat);
 stdfeat = zeros(1,numfeat);
 normbigmat = zeros(totaleps,numfeat+1);
+
+%===ALTERNATIVE===
+%make a matrix from both activities (except the last column = label)
+% bigmat = vertcat(activity1(:,1:numfeat), activity2(:,1:numfeat));
+%take the average of each feature column
+
+%=================
 
 % Normalize large matrix
 
@@ -47,7 +53,7 @@ end
 % Find normalized vector difference
 
 u = avgact2-avgact1;
-norm_u = u./(avgact2.^2+avgact1.^2);
+norm_u = u./sqrt(avgact2.^2+avgact1.^2);
 norm_u = norm_u(:);
 
 % Multiply 
