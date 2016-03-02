@@ -48,8 +48,8 @@ Fx = fft_calc(x,fs);
 Fy = fft_calc(y,fs);
 Fz = fft_calc(z,fs);
 
-% Use 5 second windows
-T = 5;
+% Use 2 second windows
+T = 2;
 n = fs*T; % number of points per window
 
 k = 1;
@@ -102,4 +102,6 @@ plot(t_window,r)
 % 
 % minlocations = minlocations(minlocations~=0);
 % mintimes = minlocations/fs;
-% 
+
+
+feature = acc_extractor (x(1:fs*10), y(1:fs*10), z(1:fs*10), fs)

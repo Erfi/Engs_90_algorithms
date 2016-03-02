@@ -8,6 +8,9 @@ N = numel(mic);
 t = (0:N-1)/fs;
 disp('loading file...done!')
 
+features = mic_extractor (mic, 50000)
+
+
 % mic_median = median_filter(mic,5000,20);
 % [Fx,f] = fft_calc(mic_median,fs);
 % 
@@ -50,19 +53,15 @@ disp('notch filter...done!')
 % mic_noiseremoved = remove_noise(mic_notch,100,0.2);
 
 %[Fx,f] = fft_calc(mic_noiseremoved(7301:14880),fs);
-[Fx,f2] = fft_calc(mic_blips_removed,fs);
+[Fx,f2] = fft_calc(mic,fs);
 
-figure(1)
+figure()
 subplot(211)
 plot(t,mic,t,mic_notch)
 subplot(212)
 semilogx(f1,Fx, 'b',f2,Fy,'r')
 %semilogx(f,Fx)
 
-%%
-% disp('PLaying sound...');
-% sound (mic,50000)
-% disp('Sound...over... *sob*');
 
 wavwrite(mic_notch,50000,24,'filtered_mic_data');
 disp ('File saved!');

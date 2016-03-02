@@ -1,49 +1,67 @@
-function [v_mag,v,r,t_window] = ACC_extractor(filename1,filename2,time,window_time)
+function feature_vector = acc_extractor (acc_x_epoch, acc_y_epoch, acc_z_epoch, fs)
 
-fs = 2000;                     % Hz
-Acc1 = load(filename1);
-Acc1 = Acc1.data;
-Acc2 = load(filename2);
-Acc2 = Acc2.data;
+% Each epoch must be the same size
 
-length1 = length(Acc1);
-length2 = length(Acc2);
-use_length = min(length1, length2);     % cut x, y, and z vectors to same size
+[b,a] = butter(6,100/(fs/2));
 
-Acc(:,1) = Acc1(1:use_length,4);
-Acc(:,2) = Acc2(1:use_length,1);
-Acc(:,3) = Acc2(1:use_length,2);
+x = filtfilt(b,a,acc_x_epoch);
+y = filtfilt(b,a,acc_y_epoch);
+z = filtfilt(b,a,acc_z_epoch);
 
-t = (1:length(Acc1))/fs;
+t = (1:numel(acc_x_epoch))./fs;
 
-start_time = time(1);                         % user-defined, units = seconds
-start_time = start_time*fs + 1;    % time --> index in time vector
-end_time = time(2);                          % user-defined, units = seconds
-end_time = end_time*fs;        % time --> index in time vector
-                            
-test_acc = Acc(start_time:end_time, :);      
-test_t = t(start_time:end_time);
-
-x = test_acc(:,1);
-y = test_acc(:,2);
-z = test_acc(:,3);
 acc_mag = sqrt(x.^2+y.^2+z.^2);
 
-% Use 5 second windows
-n = fs*window_time; % number of points per window
+[FT_mag,f] = fft_calc(acc_mag,fs);
+
+% Use 1/5 second windows
+T = 1/5; 
+n = fs*T; % number of points per window
 k = 1;
+
 for i = 1:n:numel(x)-n
     x_window = x(i:i+n);
     y_window = y(i:i+n);
     z_window = z(i:i+n);
 
     acc_mag_window = acc_mag(i:i+n);
+    acc_filtered_window = acc_mag(i:i+n);
 
     v(k,:) = [var(x_window), var(y_window), var(z_window)];
     r(k,:) = [corr(x_window,y_window), corr(x_window,z_window), corr(y_window,z_window)];
     v_mag(k) = var(acc_mag_window);
-    t_window(k) = test_t(i);
+    t_window(k) = t(i);
     k = k + 1;
 end
 
-plot(test_t,acc_mag)
+acc_mag_av = mean (acc_mag);
+acc_mag_std = std (acc_mag);
+acc_mag_max = max (acc_mag);
+
+acc_FT_mag_av = mean (FT_mag); % indication of the power of the wave 
+
+acc_xy_corr_mean = mean (r(1,:));
+acc_xz_corr_mean = mean (r(2,:));
+acc_yz_corr_mean = mean (r(3,:));
+
+acc_xy_corr_std = std (r(1,:));
+acc_xz_corr_std = std (r(2,:));
+acc_yz_corr_std = std (r(3,:));
+
+acc_spectral_centroid = dot (FT_mag, f) / sum (f);
+
+thresh = 0.9 * acc_mag_max; 
+
+total = 0; 
+for i = 1 : numel (acc_mag)
+	if (acc_mag(i) > thresh)
+		total = total + 1;
+	end
+end
+
+acc_high_mag_time = total / fs; %can reveal twitches (if low)
+
+feature_vector = [acc_mag_av, acc_mag_std, acc_mag_max, acc_FT_mag_av,...
+					acc_xy_corr_mean, acc_xz_corr_mean, acc_yz_corr_mean,...
+					acc_xy_corr_std, acc_xz_corr_std, acc_yz_corr_std, ...
+					acc_high_mag_time, acc_spectral_centroid];

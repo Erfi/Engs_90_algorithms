@@ -28,35 +28,37 @@
 
 function feature_vector = EMG_extractor(epoch, fs)
 
+% make data vectors
+N = numel (epoch);
+t =(1:N)./fs; 
+
 % Filter epoch
-% Low-pass FIR filter
-% epoch = filter(fir1(100, 150/(fs/2)), 1, epoch);
-t =(1:numel(epoch))./fs; 
+[b,a] = butter(2,[0.5 150]/(fs/2));
+bpf_y = filtfilt(b, a, epoch);
 
 % Fourier Transform stuff
-N = numel(t);
-f = fs/N:fs/N:fs/2;
-temp = fft(epoch);
-FT = 20*log10(abs(temp(1:N/2)));
+[FT, f] = fft_calc (bpf_y, fs);
 
 % Compute features
-IEMG = sum (abs(epoch)); % Integrated EMG
-MAV  = IEMG/ numel(epoch); % Mean Absolute Value
-variance = var(epoch);
-rootmean = rms(epoch);
-waveform_length = sum (abs(diff(epoch)));
-max_peak = max(findpeaks(epoch));
-wilson_amplitude = 0; 
-for i = 1: numel(epoch)
-	if epoch (i) > 0.75*max_peak
-		wilson_amplitude = wilson_amplitude + 1; 
+emg_IEMG = sum (abs(bpf_y)); % Integrated EMG
+emg_MAV  = emg_IEMG/ numel(bpf_y); % Mean Absolute Value
+emg_variance = var(bpf_y);
+emg_rootmean = rms(bpf_y);
+emg_waveform_length = sum (abs(diff(bpf_y)));
+emg_max_peak = max(findpeaks(bpf_y));
+emg_time_high = 0; 
+for i = 1: numel(bpf_y)
+	if bpf_y (i) > 0.75*emg_max_peak
+		emg_time_high = emg_time_high + 1; 
 	end
 end
-wilson_amplitude = wilson_amplitude/ numel(epoch); 
-crossings = find_zeros2(t, epoch); 
-zero_crossings = numel (crossings);
+emg_time_high = emg_time_high/ numel(bpf_y); 
+% crossings = find_zeros2(t, epoch); % takes too much time!
+% zero_crossings = numel (crossings);
 
-mean_FT = mean(FT);
-std_FT = std(FT);
+emg_mean_FT = mean(FT); % measure of power
 
-feature_vector = [MAV, variance, rootmean, waveform_length, max_peak, wilson_amplitude, zero_crossings, mean_FT, std_FT];
+emg_spectral_centroid = dot (FT, f) / sum (f);
+
+feature_vector = [emg_MAV, emg_variance, emg_rootmean, emg_waveform_length,...
+	emg_max_peak, emg_time_high, emg_mean_FT, emg_spectral_centroid];

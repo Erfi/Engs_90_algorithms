@@ -114,7 +114,7 @@ for i = 1:numel(R)-1
 		end
 	end
 	
-		for j = T_ind(i) : b
+	for j = T_ind(i) : b
 		if sign (bpf_y(j)) ~= sign(bpf_y(j+1))
 			T_end(i) = j;
 		end
@@ -134,7 +134,7 @@ for i = 1:numel(R)-1
 	
 end
 
-for i = 1: numel(P_start)
+for i = 1: (numel(P_start)-2)%-2 is a hack to get it going. It was giving index out of bound for T_end(i) 
 	P_length(i) = P_end(i) - P_start(i);
 	T_length(i) = T_end(i) - T_start(i); 
 	ST_length(i) = T_ind(i) - S_ind(i); %TO DO: look for ST elevation/ depression
@@ -195,10 +195,7 @@ ST_height_std = std (STval_local_average); % high s tandard deviation is bad!
 
 %Average Heart rate in bpm
 HR_av_bpm = 60/ RR_length_av;
-plot (t, bpf_y);
-figure ()
-[Fx f] = fft_calc(bpf_y, 5000);
-plot (f, Fx)
+
 feature_vector = [RR_length_av, RR_length_std,P_height_av,P_height_std,...
     P_length_av,P_length_std, T_height_av,T_height_std,T_length_av,...
     T_length_std,RS_height_av,RS_height_std,QRS_length_av,QRS_length_std,...
