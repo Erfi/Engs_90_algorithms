@@ -42,20 +42,19 @@
 
 % Load data
 clear; clc; clf;
-data = load('P:\16winter\engs090\GR 04 Detect Seizures\EMU data\Labeled Data for Use\All_Eat\1eat_eda_emg_ecg.mat');
+ECG = load('P:\16winter\engs090\GR 04 Detect Seizures\Feature Extraction\Labeled Data for Use\Session 2\Technology\Tech_9728_10820_eda_emg_ecg.mat');
 sampling_rate = 5000; 
-
 
 % Create test data vector
 start_time = 1;
 end_time = 5 * sampling_rate;
-y = ECG(start_time:end_time);
-t = t(start_time:end_time);
+y = ECG.data(start_time:end_time,3);
+t = (start_time:end_time)/sampling_rate;
 N = numel(t);
-f = fs/N:fs/N:fs/2;
+% f = sampling_rate/N:sampling_rate/N:sampling_rate/2;
 
 % Low-pass FIR filter
-bpf_y = filter(fir1(100, 150/(fs/2)), 1, y);
+bpf_y = filter(fir1(100, 150/(sampling_rate/2)), 1, y);
 temp = fft(bpf_y);
 Fbpfy = 20*log10(abs(temp(1:N/2)));
 
@@ -124,7 +123,6 @@ end
 % Plotting
 %Plot 1: Plot the ECG signal with features labeled
 figure(1)
-subplot(211)
 plot(t,bpf_y)
 hold on
 hline(0)

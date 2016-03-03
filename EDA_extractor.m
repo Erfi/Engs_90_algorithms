@@ -40,9 +40,9 @@ eda_std = std(bpf_y);
 eda_max_deriv = max (abs(diff (bpf_y)))/fs; %very small 
 
 %Time high
-eda_time_high = 0; 
+eda_time_high = 0; %NOTE ADD THIS TO THE RETURNING FEATURES
 for i = 1: numel(bpf_y)
-	if bpf_y (i) > 0.9*eda_max
+	if bpf_y (i) > 0.95*eda_max
 		eda_time_high = eda_time_high + 1; 
 	end
 end
@@ -56,4 +56,4 @@ end
 eda_spectral_centroid = dot (FT, f) / sum (f);
 
 feature_vector = [eda_max, eda_min, eda_av, eda_std,...
-	eda_max_deriv, eda_time_high, eda_signal_length, eda_spectral_centroid];
+	eda_max_deriv, eda_signal_length, eda_spectral_centroid];

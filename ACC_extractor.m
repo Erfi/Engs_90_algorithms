@@ -50,7 +50,7 @@ acc_yz_corr_std = std (r(3,:));
 
 acc_spectral_centroid = dot (FT_mag, f) / sum (f);
 
-thresh = 0.9 * acc_mag_max; 
+thresh = 0.95 * acc_mag_max; 
 
 total = 0; 
 for i = 1 : numel (acc_mag)
@@ -59,9 +59,10 @@ for i = 1 : numel (acc_mag)
 	end
 end
 
+%NOTE: ADD THIS TO THE RETURNING FEATURES
 acc_high_mag_time = total / fs; %can reveal twitches (if low)
 
 feature_vector = [acc_mag_av, acc_mag_std, acc_mag_max, acc_FT_mag_av,...
 					acc_xy_corr_mean, acc_xz_corr_mean, acc_yz_corr_mean,...
 					acc_xy_corr_std, acc_xz_corr_std, acc_yz_corr_std, ...
-					acc_high_mag_time, acc_spectral_centroid];
+					acc_spectral_centroid];

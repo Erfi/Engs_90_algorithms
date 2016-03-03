@@ -23,12 +23,12 @@ function [ featureRow ] = makeFeatureRow(mat1,sampleRate1, ...
     acc_feature = acc_extractor(mat1(:,1), mat1(:,2), mat1(:,3), sampleRate1);
     eda_feature = EDA_extractor(mat2(:,1), sampleRate2);
     ecg_feature = ECG_extractor(mat2(:,3), sampleRate2);
-
+    mic_feature = mic_extractor(mat1(:,4), sampleRate1);
     %HERE ADD MORE SENSOR EXTRACTORS
 
     %make one row (1xd) from all the extracted features
     %NOTE: Tag must be added last
-    featureRow = horzcat(acc_feature, eda_feature, emg_feature, ecg_feature,Tag);
+    featureRow = horzcat(acc_feature, mic_feature, eda_feature, emg_feature, ecg_feature,Tag);
 end
 
     

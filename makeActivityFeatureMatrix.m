@@ -1,4 +1,4 @@
-%Erfan Azad
+  %Erfan Azad
 %Date; 1 March 2016
 %Description: creates a matrix of one activity with
 %features of one epoch at each row

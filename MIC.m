@@ -8,7 +8,7 @@ N = numel(mic);
 t = (0:N-1)/fs;
 disp('loading file...done!')
 
-features = mic_extractor (mic, 50000)
+features = mic_extractor (mic, 50000);
 
 
 % mic_median = median_filter(mic,5000,20);
@@ -57,11 +57,21 @@ disp('notch filter...done!')
 
 figure()
 subplot(211)
-plot(t,mic,t,mic_notch)
+plot(t,mic,'b',t,mic_notch,'r')
+xlim([13.75 15.25]);
+xlabel('Time (seconds)');
+ylabel('Amplitude (mV)');
+title('Audio Signal Amplitude Before and After Filtering');
+legend('Before Filtering', 'After Filtering');
+
 subplot(212)
 semilogx(f1,Fx, 'b',f2,Fy,'r')
+xlabel('Frequency (Hz)');
+ylabel('Magnitude (dB)');
+title('Frequency Response of Audio Signal Before and After Filtering');
+legend('Before Filtering', 'After Filtering');
+
 %semilogx(f,Fx)
 
-
-wavwrite(mic_notch,50000,24,'filtered_mic_data');
+% wavwrite(mic_notch,50000,24,'filtered_mic_data');
 disp ('File saved!');

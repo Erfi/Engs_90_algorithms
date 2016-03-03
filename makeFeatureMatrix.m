@@ -8,16 +8,44 @@ EatDirectory = strcat(BaseDirectory,'All_Eat\');
 TalkDirectory = strcat(BaseDirectory,'All_Talk\');
 SleepDirectory = strcat(BaseDirectory,'All_Sleep\');
 TechDirectory = strcat(BaseDirectory,'All_Tech\');
+SeizureDirectory = strcat(BaseDirectory,'All_Seizure\');
+UnlabeledDirectory = strcat(BaseDirectory,'All_Unlabeled\');
 
 epoch_length = 5;       % define # seconds
+makeAll = true;
 
-EatFeatureMatrix = makeActivityFeatureMatrix(EatDirectory,'eat',1, epoch_length);
-TalkFeatureMatrix = makeActivityFeatureMatrix(TalkDirectory,'talk',2, epoch_length);
-SleepFeatureMatrix = makeActivityFeatureMatrix(SleepDirectory,'sleep',3, epoch_length);
-TechFeatureMatrix = makeActivityFeatureMatrix(TechDirectory,'Tech',4, epoch_length);
+if(makeAll)
+    EatFeatureMatrix = makeActivityFeatureMatrix(EatDirectory,'eat',1, epoch_length);
+    TalkFeatureMatrix = makeActivityFeatureMatrix(TalkDirectory,'talk',2, epoch_length);
+    SleepFeatureMatrix = makeActivityFeatureMatrix(SleepDirectory,'sleep',3, epoch_length);
+    TechFeatureMatrix = makeActivityFeatureMatrix(TechDirectory,'Tech',4, epoch_length);
+    SeizureFeatureMatrix = makeActivityFeatureMatrix(SeizureDirectory,'seizure',5,epoch_length);
+    UnlabeledFeatureMatrix = makeActivityFeatureMatrix(UnlabeledDirectory,'unlabeled',6,epoch_length);
+end
 
-%plot histogram
-u = LinearDiscriminantTransform(SleepFeatureMatrix, TalkFeatureMatrix);
+%plot histogram and ROC
+topFeatures = [];
+figure;
+[u, CHI] = LinearDiscriminantTransform(SleepFeatureMatrix, SeizureFeatureMatrix, 'sleep', 'seizure');
+topFeatures = cat(2,topFeatures,u);
+figure;
+[u, CHI] = LinearDiscriminantTransform(EatFeatureMatrix, SeizureFeatureMatrix, 'eat', 'seizure');
+topFeatures = cat(2,topFeatures,u);
+figure
+[u, CHI] = LinearDiscriminantTransform(TalkFeatureMatrix, SeizureFeatureMatrix, 'talk', 'seizure');
+topFeatures = cat(2,topFeatures,u);
+figure;
+[u, CHI] = LinearDiscriminantTransform(UnlabeledFeatureMatrix, SeizureFeatureMatrix, 'unlabeled', 'seizure');
+topFeatures = cat(2,topFeatures,u);
+figure;
+[u, CHI] = LinearDiscriminantTransform(TechFeatureMatrix, SeizureFeatureMatrix, 'tech', 'seizure');
+topFeatures = cat(2,topFeatures,u);
+figure;
+histogram(topFeatures,54);
+
+
+ 
+
 
 
 

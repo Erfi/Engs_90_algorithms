@@ -1,5 +1,5 @@
 
-epoch = data(1:5000*10,3);
+epoch = ECG.data(1:5000*5,3);
 fs = 5000;
 
 % Create time vector 
@@ -7,7 +7,7 @@ t = (1:numel(epoch))./fs;
 N = numel(t);
 
 % Bandpass IIR zero-phase filter
-[b,a] = butter(2,[0.5 20]/(fs/2));
+[b,a] = butter(2,[0.5 100]/(fs/2));
 bpf_y = filtfilt(b, a, epoch);
 d1 = designfilt('bandstopiir','FilterOrder',4, ...
                'HalfPowerFrequency1',59,'HalfPowerFrequency2',61, ...
@@ -33,8 +33,6 @@ bpf_y = filtfilt (d2, bpf_y);
 bpf_y = filtfilt (d3, bpf_y);
 bpf_y = filtfilt (d4, bpf_y);
 bpf_y = filtfilt (d5, bpf_y);
-
-plot(t,bpf_y);
 
 % temp = fft(bpf_y);
 % FT = 20*log10(abs(temp(1:N/2)));
@@ -96,11 +94,8 @@ for i = 1:numel(R)-1
 	
 end
 
-numel(P_start)-2
-
 for i = 1: (numel(P_start)-2)%-2 is a hack to get it going. It was giving index out of bound for T_end(i) 
-	i
-    P_length(i) = P_end(i) - P_start(i);
+	P_length(i) = P_end(i) - P_start(i);
 	T_length(i) = T_end(i) - T_start(i); 
 	ST_length(i) = T_ind(i) - S_ind(i); %TO DO: look for ST elevation/ depression
 	PR_length(i) = R_ind(i+1) - P_ind(i); %can tell us about PAD and AV block
@@ -161,8 +156,27 @@ ST_height_std = std (STval_local_average); % high s tandard deviation is bad!
 %Average Heart rate in bpm
 HR_av_bpm = 60/ RR_length_av;
 
-feature_vector = [RR_length_av, RR_length_std,P_height_av,P_height_std,...
-    P_length_av,P_length_std, T_height_av,T_height_std,T_length_av,...
-    T_length_std,RS_height_av,RS_height_std,QRS_length_av,QRS_length_std,...
-    PR_length_av,PR_length_std,ST_length_av,ST_length_std,ST_height_av,...
-    ST_height_std,HR_av_bpm];
+% Plotting
+%Plot 1: Plot the ECG signal with features labeled
+figure(1)
+plot(t,bpf_y)
+hold on
+hline(0)
+
+plot(t(R_ind), bpf_y(R_ind), 'rx')
+plot(t(S_ind), bpf_y(S_ind), 'go')
+plot(t(Q_ind), bpf_y(Q_ind), 'bo')
+plot(t(T_ind), bpf_y(T_ind), 'gx')
+plot(t(P_ind), bpf_y(P_ind), 'bx')
+plot(t(T_start), bpf_y(T_start), 'kx')
+plot(t(T_end), bpf_y(T_end), 'kx')
+plot(t(P_start), bpf_y(P_start), 'kx')
+plot(t(P_end), bpf_y(P_end), 'kx')
+
+% Plot all zero crossings
+% for i = 1:numel(crossings)
+% 	vline(crossings(i))
+% end
+% Plot the derivative
+%plot(t(1:N-1), dydt_bpf/max(dydt_bpf),'r--')
+hold off

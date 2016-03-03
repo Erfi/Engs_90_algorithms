@@ -44,10 +44,34 @@ CHI = (normbigmat(:,1:numfeat))*norm_u';
 %plot the Histogram
 plotDualHistogram(CHI, act1epochs, -10,10,0.4,act1Name,act2Name);
 
+% %=====HISTOGRAM=====
+% binSize = 0.5;
+% numBins = -10:binSize:10;
+% h1 = histogram(CHI(1:act1epochs),numBins,'Normalization', 'pdf');
+% set(h1, 'FaceColor','r');
+% pd1 = fitdist(CHI(1:act1epochs),'normal');
+% hold on;
+% h2 = histogram(CHI(act1epochs+1:end),numBins, 'Normalization', 'pdf');
+% set(h2, 'FaceColor','b');
+% pd2 = fitdist(CHI(act1epochs+1:end),'normal');
+% hold on;
+% %==================
+% 
+% %plot distribution
+% 
+% n1 = normpdf(numBins,pd1.mu,pd1.sigma);
+% n2 = normpdf(numBins,pd2.mu,pd2.sigma);
+% plot(numBins, n1,'r','LineWidth',2);
+% hold on;
+% plot(numBins, n2 ,'b','LineWidth',2);
+% hold off;
+
+
 % Order the features
 u_ordered = sort(abs(norm_u), 'descend');
 
 num_best_feats = 10;
+% best_feats = zeros(1,num_best_feats);
 best_feats = [];
 
 for k = 1:num_best_feats
@@ -57,19 +81,28 @@ end
 LDT = best_feats;
 
 k=1;
+% CHI
+% size(CHI)
 for th = min(CHI):0.01:max(CHI);
     num = find(CHI>=th);%all indecies of the data that larger than threshold
-    lTP = find(num>act1epochs);%if from act1
-    lFP = find(num<=act1epochs);%if from act2
+    lTP = find(num<=act1epochs);%if from act1
+    lFP = find(num>act1epochs);%if from act2
     nTP(k) = length(lTP);
     nFP(k) = length(lFP);
-    TPR(k) = nTP(k)/(act2epochs);
-    FPR(k) = nFP(k)/(act1epochs);
+    TPR(k) = nTP(k)/(act1epochs);
+    FPR(k) = nFP(k)/(act2epochs);
     thresh(k) = th;
     k = k+1;
+    
+%     if TP(k) ==0 
+%         break
+%     else if FP(k) == 0 
+%         break
+%     end
+        
 end
 figure;
-plot(FPR,TPR, 'LineWidth' , 2);
+plot(FPR,TPR);
 
 end
 
