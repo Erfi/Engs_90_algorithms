@@ -62,3 +62,5 @@ emg_spectral_centroid = dot (FT, f) / sum (f);
 
 feature_vector = [emg_MAV, emg_variance, emg_rootmean, emg_waveform_length,...
 	emg_max_peak, emg_time_high, emg_mean_FT, emg_spectral_centroid];
+
+end

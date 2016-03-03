@@ -20,12 +20,11 @@ function plotDualHistogram( CHI, activitySplitIndex, lowRange, highRange, binsiz
     binSize = binsize;
     numBins = lowRange:binSize:highRange;
     h1 = histogram(CHI(1:activitySplitIndex),numBins,'Normalization', 'pdf');
-    set(h1, 'FaceColor','r');
+    set(h1, 'FaceColor','b');
     pd1 = fitdist(CHI(1:activitySplitIndex),'normal');
-   
     hold on;
     h2 = histogram(CHI(activitySplitIndex+1:end),numBins, 'Normalization', 'pdf');
-    set(h2, 'FaceColor','b');
+    set(h2, 'FaceColor','r');
     pd2 = fitdist(CHI(activitySplitIndex+1:end),'normal');
     hold on;
     %==================
@@ -33,9 +32,11 @@ function plotDualHistogram( CHI, activitySplitIndex, lowRange, highRange, binsiz
     %======plot normal distribution======
     n1 = normpdf(numBins,pd1.mu,pd1.sigma);
     n2 = normpdf(numBins,pd2.mu,pd2.sigma);
-    plot(numBins, n1,'r','LineWidth',2);
+    plot(numBins, n1,'b','LineWidth',2);
     hold on;
-    plot(numBins, n2 ,'b','LineWidth',2);
+    plot(numBins, n2 ,'r','LineWidth',2);
+    title([act1Name,' ','vs.',' ',act2Name]);
+    ylabel('frequency');
     legend(act1Name, act2Name);
     hold off;
     %===================================

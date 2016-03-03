@@ -47,7 +47,7 @@ mic = filtfilt(d5,mic);
 
 % Magnitude features
 mic_mag = abs(mic);
-mic_mag_av = mean (mic_mag);
+mic_mag_avg = mean (mic_mag);
 mic_mag_std = std (mic_mag);
 
 % Pitch related to 
@@ -68,10 +68,7 @@ mic_bronchial_secretion_index = mic_bronchial_secretion_index/ fs;
 
 mic_linear_prediction_coefficients = lpc (mic, 1);
 mic_linear_prediction_coefficient = mic_linear_prediction_coefficients (2);
-feature_vector = [mic_mag_av, mic_mag_std, pitch, mic_spectral_centroid,mic_bronchial_secretion_index, mic_linear_prediction_coefficient];
+feature_vector = [mic_mag_avg, mic_mag_std, pitch, mic_spectral_centroid,...
+    mic_bronchial_secretion_index, mic_linear_prediction_coefficient];
 
-% figure()
-% subplot(211)
-% plot(t,epoch,t,mic)
-% subplot(212)
-% semilogx(f1,F1, 'b',f2,F2,'r')
+end

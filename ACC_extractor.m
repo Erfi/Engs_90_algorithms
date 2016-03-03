@@ -1,20 +1,23 @@
 function feature_vector = acc_extractor (acc_x_epoch, acc_y_epoch, acc_z_epoch, fs)
 
-% Each epoch must be the same size
+% Note: each epoch must be the same size
 
+t = (1:numel(acc_x_epoch))./fs;
 [b,a] = butter(6,100/(fs/2));
+
+
 
 x = filtfilt(b,a,acc_x_epoch);
 y = filtfilt(b,a,acc_y_epoch);
 z = filtfilt(b,a,acc_z_epoch);
 
-t = (1:numel(acc_x_epoch))./fs;
 
 acc_mag = sqrt(x.^2+y.^2+z.^2);
 
+%Compute Fourier transform
 [FT_mag,f] = fft_calc(acc_mag,fs);
 
-% Use 1/5 second windows
+% Use 1/5 second windows to smooth data
 T = 1/5; 
 n = fs*T; % number of points per window
 k = 1;
@@ -34,7 +37,7 @@ for i = 1:n:numel(x)-n
     k = k + 1;
 end
 
-acc_mag_av = mean (acc_mag);
+acc_mag_avg = mean (acc_mag);
 acc_mag_std = std (acc_mag);
 acc_mag_max = max (acc_mag);
 
@@ -62,7 +65,8 @@ end
 %NOTE: ADD THIS TO THE RETURNING FEATURES
 acc_high_mag_time = total / fs; %can reveal twitches (if low)
 
-feature_vector = [acc_mag_av, acc_mag_std, acc_mag_max, acc_FT_mag_av,...
+feature_vector = [acc_mag_avg, acc_mag_std, acc_mag_max, acc_FT_mag_av,...
 					acc_xy_corr_mean, acc_xz_corr_mean, acc_yz_corr_mean,...
 					acc_xy_corr_std, acc_xz_corr_std, acc_yz_corr_std, ...
 					acc_spectral_centroid];
+                

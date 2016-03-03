@@ -201,4 +201,10 @@ feature_vector = [RR_length_av, RR_length_std,P_height_av,P_height_std,...
     T_length_std,RS_height_av,RS_height_std,QRS_length_av,QRS_length_std,...
     PR_length_av,PR_length_std,ST_length_av,ST_length_std,ST_height_av,...
     ST_height_std,HR_av_bpm];
+
+% plot(t,bpf_y);
+% title('Non-Seizure Data: ECG')
+% xlabel('Amplitude')
+% ylabel('Time (s)')
+
 end

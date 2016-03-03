@@ -58,9 +58,9 @@ eda_spectral_centroid = dot (FT, f) / sum (f);
 feature_vector = [eda_max, eda_min, eda_av, eda_std,...
 	eda_max_deriv, eda_signal_length, eda_spectral_centroid];
 
-% plot(t,bpf_y);
-% title('Seizure Data: EDA')
-% xlabel('Time(s)')
-% ylabel('Microsiemens')
+plot(t,bpf_y);
+title('Seizure Data: EDA')
+xlabel('Time(s)')
+ylabel('Microsiemens')
 
 end

@@ -1,4 +1,3 @@
-clear all;
 close all;
 clc;
 
@@ -12,7 +11,7 @@ SeizureDirectory = strcat(BaseDirectory,'All_Seizure\');
 UnlabeledDirectory = strcat(BaseDirectory,'All_Unlabeled\');
 
 epoch_length = 5;       % define # seconds
-makeAll = true;
+makeAll = false;        % set to true to load matrices 
 
 if(makeAll)
     EatFeatureMatrix = makeActivityFeatureMatrix(EatDirectory,'eat',1, epoch_length);
@@ -26,22 +25,34 @@ end
 %plot histogram and ROC
 topFeatures = [];
 figure;
-[u, CHI] = LinearDiscriminantTransform(SleepFeatureMatrix, SeizureFeatureMatrix, 'sleep', 'seizure');
+[u, maxACC, maxPPV, Integral] = LinearDiscriminantTransform(SleepFeatureMatrix, SeizureFeatureMatrix, 'sleep', 'seizure');
 topFeatures = cat(2,topFeatures,u);
+fprintf('Sleep vs. Seizure --> Maximum Precision: %.3f  |  Maximum Accuracy: %.3f |  Area Under ROC Curve: %.3f \n',maxPPV,maxACC,Integral);
 figure;
-[u, CHI] = LinearDiscriminantTransform(EatFeatureMatrix, SeizureFeatureMatrix, 'eat', 'seizure');
+[u, maxACC, maxPPV, Integral] = LinearDiscriminantTransform(EatFeatureMatrix, SeizureFeatureMatrix, 'eat', 'seizure');
 topFeatures = cat(2,topFeatures,u);
+fprintf('Eat vs. Seizure --> Maximum Precision: %.3f  |  Maximum Accuracy: %.3f |  Area Under ROC Curve: %.3f \n',maxPPV,maxACC,Integral);
 figure
-[u, CHI] = LinearDiscriminantTransform(TalkFeatureMatrix, SeizureFeatureMatrix, 'talk', 'seizure');
+[u, maxACC, maxPPV, Integral] = LinearDiscriminantTransform(TalkFeatureMatrix, SeizureFeatureMatrix, 'talk', 'seizure');
 topFeatures = cat(2,topFeatures,u);
+fprintf('Talk vs. Seizure --> Maximum Precision: %.3f  |  Maximum Accuracy: %.3f |  Area Under ROC Curve: %.3f \n',maxPPV,maxACC,Integral);
 figure;
-[u, CHI] = LinearDiscriminantTransform(UnlabeledFeatureMatrix, SeizureFeatureMatrix, 'unlabeled', 'seizure');
+[u, maxACC, maxPPV, Integral] = LinearDiscriminantTransform(UnlabeledFeatureMatrix, SeizureFeatureMatrix, 'normal', 'seizure');
 topFeatures = cat(2,topFeatures,u);
+fprintf('Normal vs. Seizure --> Maximum Precision: %.3f  |  Maximum Accuracy: %.3f |  Area Under ROC Curve: %.3f \n',maxPPV,maxACC,Integral);
 figure;
-[u, CHI] = LinearDiscriminantTransform(TechFeatureMatrix, SeizureFeatureMatrix, 'tech', 'seizure');
+[u, maxACC, maxPPV, Integral] = LinearDiscriminantTransform(TechFeatureMatrix, SeizureFeatureMatrix, 'technology', 'seizure');
 topFeatures = cat(2,topFeatures,u);
+fprintf('Technology vs. Seizure --> Maximum Precision: %.3f  |  Maximum Accuracy: %.3f |  Area Under ROC Curve: %.3f \n',maxPPV,maxACC,Integral);
 figure;
-histogram(topFeatures,54);
+[u, maxACC, maxPPV, Integral] = LinearDiscriminantTransform(vertcat(EatFeatureMatrix,TalkFeatureMatrix,SleepFeatureMatrix,TechFeatureMatrix,UnlabeledFeatureMatrix), SeizureFeatureMatrix, 'non-seizure', 'seizure');
+topFeatures = cat(2,topFeatures,u);
+fprintf('Non-Seizure vs. Seizure --> Maximum Precision: %.3f  |  Maximum Accuracy: %.3f |  Area Under ROC Curve: %.3f \n',maxPPV,maxACC,Integral);
+
+figure;
+sort(topFeatures,'descend')
+histogram(topFeatures,53);
+title('Histogram of top ten features');
 
 
  

@@ -557,6 +557,52 @@ for i = 1:numEpoches
    endIndx = endIndx + (sampleRate*10);
 end
 
+%% for seizure2 acc-mic
+clear all;
+close all;
+DirectoryName = 'P:\16winter\engs090\GR 04 Detect Seizures\EMU data\Labeled Data for Use\';
+filename = 'Patient 4\Seizure\seizure1_acc_mic.mat';%<<<
+acc_mic = load(strcat(DirectoryName, filename));%<<<
+acc_mic = acc_mic.data;%<<<
+
+sampleRate = 50000;% sample rate for acc1 acc2 acc3 and mic
+numEpoches = floor(size(acc_mic,1)/(sampleRate*10));% num of 10sec epoches we can get from this .mat file
+
+
+startInx = 1;
+endIndx = sampleRate*10;
+for i = 1:numEpoches
+   data = acc_mic(startInx:endIndx,:);%<<<
+   save(strcat(DirectoryName,'All_Seizure\',num2str(i+6),'seizure_acc_mic','.mat'),'data');%<<<
+   
+   %update indecies
+   startInx = endIndx+1;
+   endIndx = endIndx + (sampleRate*10);
+end
+
+%% for seizure2 eda-emg-ecg
+clear all;
+close all;
+DirectoryName = 'P:\16winter\engs090\GR 04 Detect Seizures\EMU data\Labeled Data for Use\';
+filename = 'Patient 4\Seizure\seizure1_eda_emg_ecg.mat';%<<<
+Tech2_eda_emg_ecg = load(strcat(DirectoryName, filename));%<<<
+Tech2_eda_emg_ecg = Tech2_eda_emg_ecg.data;%<<<
+
+sampleRate = 5000;% sample rate for acc1 acc2 acc3 and mic
+numEpoches = floor(size(Tech2_eda_emg_ecg,1)/(sampleRate*10));% num of 10sec epoches we can get from this .mat file %<<<
+
+
+startInx = 1;
+endIndx = sampleRate*10;
+for i = 1:numEpoches
+   data = Tech2_eda_emg_ecg(startInx:endIndx,:);%<<<
+   save(strcat(DirectoryName,'All_Seizure\',num2str(i+6),'seizure_eda_emg_ecg','.mat'),'data');%<<<
+   
+   %update indecies
+   startInx = endIndx+1;
+   endIndx = endIndx + (sampleRate*10);
+end
+
 %% for unlabeled1 acc-mic
 clear all;
 close all;
@@ -580,7 +626,7 @@ for i = 1:numEpoches
    endIndx = endIndx + (sampleRate*10);
 end
 
-%% for unlabeled eda-emg-ecg
+%% for unlabeled1 eda-emg-ecg
 clear all;
 close all;
 DirectoryName = 'P:\16winter\engs090\GR 04 Detect Seizures\EMU data\Labeled Data for Use\';
@@ -597,6 +643,52 @@ endIndx = sampleRate*10;
 for i = 1:numEpoches
    data = eda_emg_ecg(startInx:endIndx,:);%<<<
    save(strcat(DirectoryName,'All_Unlabeled\',num2str(i),'unlabeled_eda_emg_ecg','.mat'),'data');%<<<
+   
+   %update indecies
+   startInx = endIndx+1;
+   endIndx = endIndx + (sampleRate*10);
+end
+
+%% for unlabeled2 acc-mic
+clear all;
+close all;
+DirectoryName = 'P:\16winter\engs090\GR 04 Detect Seizures\EMU data\Labeled Data for Use\';
+filename = 'Patient 4\Normal\norm1_acc_mic.mat';%<<<
+acc_mic = load(strcat(DirectoryName, filename));%<<<
+acc_mic = acc_mic.data;%<<<
+
+sampleRate = 50000;% sample rate for acc1 acc2 acc3 and mic
+numEpoches = floor(size(acc_mic,1)/(sampleRate*10));% num of 10sec epoches we can get from this .mat file
+
+
+startInx = 1;
+endIndx = sampleRate*10;
+for i = 1:numEpoches
+   data = acc_mic(startInx:endIndx,:);%<<<
+   save(strcat(DirectoryName,'All_Unlabeled\',num2str(i+6),'unlabeled_acc_mic','.mat'),'data');%<<<
+   
+   %update indecies
+   startInx = endIndx+1;
+   endIndx = endIndx + (sampleRate*10);
+end
+
+%% for unlabeled2 eda-emg-ecg
+clear all;
+close all;
+DirectoryName = 'P:\16winter\engs090\GR 04 Detect Seizures\EMU data\Labeled Data for Use\';
+filename = 'Patient 4\Normal\norm1_eda_emg_ecg.mat';%<<<
+eda_emg_ecg = load(strcat(DirectoryName, filename));%<<<
+eda_emg_ecg = eda_emg_ecg.data;%<<<
+
+sampleRate = 5000;% sample rate for acc1 acc2 acc3 and mic
+numEpoches = floor(size(eda_emg_ecg,1)/(sampleRate*10));% num of 10sec epoches we can get from this .mat file %<<<
+
+
+startInx = 1;
+endIndx = sampleRate*10;
+for i = 1:numEpoches
+   data = eda_emg_ecg(startInx:endIndx,:);%<<<
+   save(strcat(DirectoryName,'All_Unlabeled\',num2str(i+6),'unlabeled_eda_emg_ecg','.mat'),'data');%<<<
    
    %update indecies
    startInx = endIndx+1;

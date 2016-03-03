@@ -1,7 +1,5 @@
-function [LDT, CHI] = LinearDiscriminantTransform(activity1 , activity2, act1Name, act2Name)
-
+function [LDT, maxACC, maxPPV, Integral] = LinearDiscriminantTransform(activity1 , activity2, act1Name, act2Name)
 % General code for Linear Discriminant Transform
-
 % Call matrices of features in activity A and activity B, with last column
 % containing number label of activity
 
@@ -46,30 +44,14 @@ plotDualHistogram(CHI, act1epochs, -10,10,0.4,act1Name,act2Name);
 
 % Order the features
 u_ordered = sort(abs(norm_u), 'descend');
-
-num_best_feats = 10;
+num_best_feats = 10; %we want top 10 features
 best_feats = [];
-
 for k = 1:num_best_feats
     best_feats = cat(2, best_feats ,find(abs(norm_u)==u_ordered(k))');
 end
-
 LDT = best_feats;
 
-k=1;
-for th = min(CHI):0.01:max(CHI);
-    num = find(CHI>=th);%all indecies of the data that larger than threshold
-    lTP = find(num>act1epochs);%if from act1
-    lFP = find(num<=act1epochs);%if from act2
-    nTP(k) = length(lTP);
-    nFP(k) = length(lFP);
-    TPR(k) = nTP(k)/(act2epochs);
-    FPR(k) = nFP(k)/(act1epochs);
-    thresh(k) = th;
-    k = k+1;
-end
-figure;
-plot(FPR,TPR, 'LineWidth' , 2);
-
+%plot the ROC curve
+[maxACC , maxPPV, Integral] = plotROC( CHI, act1epochs, act2epochs,act1Name, act2Name);
 end
 
